@@ -19,7 +19,7 @@
         <li><a href="#">Mantenerdores</a>
         	<ul class="sub_menu">
             	<li><a href="mtdorPerfil.jsp">Perfiles</a></li>
-                <li><a href="#">Usuarios</a></li>
+                <li><a href="mtdorUsuario.jsp">Usuarios</a></li>
                 <li><a href="#">Mascotas</a></li>
                 <li><a href="#">Medico Tratante</a></li>
             </ul>
