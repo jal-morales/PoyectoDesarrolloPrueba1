@@ -7,6 +7,7 @@ package controlador;
 
 import bd.Conexion;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -57,38 +58,75 @@ public class ControladorPerfil
         
     
     }
-//*****************************************************************************************************************************************    
     
+//*****************************************************************************************************************************************    
+
+    //LIstar   
+    public ArrayList<PerfilAcceso> PerfilesListarActvos()
+    { 
+        ArrayList<PerfilAcceso> perfil_lista=new ArrayList<>();
+        try
+        {
+            Conexion conn = new Conexion();
+            Connection conexion = conn.getConnection("medipet");
+            
+            //STATEMENT PERMITE EJECUTAR CONSULTA SQL 
+            Statement stms = conexion.createStatement();
+            
+            String consulta = "select * from permisos_usuarios where estado_permiso='Activo';";           
+            
+            ResultSet rs =stms.executeQuery(consulta);
+            while (rs.next())
+            {                
+                PerfilAcceso perA =new PerfilAcceso();
+                perA.setIdPerfil(Integer.parseInt(rs.getString("idpermisos_usuarios")));
+                perA.setNombreAcceso(rs.getString("nombre_permiso"));
+                perA.setEstado(rs.getString("estado_permiso"));
+                
+                perfil_lista.add(perA);
+
+            }
+             return perfil_lista;
+        }
+        catch(Exception ex)
+        {
+            
+            ex.printStackTrace();
+        }
+        return new ArrayList<>();
+        
+    
+    }
  
     
     
     public void AgregarPerfiles(PerfilAcceso permisos)
     {
-        try {
-            //llamamos a la conexion 
+               
+            try {
+                 //llamamos a la conexion 
             Conexion con = new Conexion();
             //llamamos a la clase conect           
                  Connection  conetar=con.getConnection("medipet");
-            Statement stms= conetar.createStatement();
-
-          //__________________________PERFECTO_______________________________
-                 
-            /*String consuta="INSERT INTO permisos_usuarios(nombre_permiso,estado_permiso) VALUES("
-                    + permisos.getNombrePermiso() + "', "  
-                    + permisos.getEstadoPerfil()+ ");";  */
+          
             
-                
-             
-            try {
                   String consulta  = "INSERT INTO permisos_usuarios VALUES(null,'" 
-                    + permisos.getNombreAcceso()+ "', " 
-                    + permisos.getEstado() + ");";      
+                    + permisos.getNombreAcceso()+ "', '"
+                    + permisos.getEstado() + "');";     
+                  
+                    PreparedStatement stms= conetar.prepareStatement(consulta);
                   
                   //llamamos al Statement que ejecutas sentencias Sql
-               
-                   stms.executeUpdate(consulta);
-                 
-                 System.out.println("Query ejecutada");
+                        if (stms!=null) 
+                        {
+                        stms.executeUpdate(consulta);
+                        System.out.println("Query ejecutada");
+                        }
+                        else 
+                        {
+                            System.out.println("Query no ejecutada");
+                        }
+                   
             } catch (Exception e) 
             {
                 System.out.println("Query no ejecutada");
@@ -96,11 +134,8 @@ public class ControladorPerfil
             }
             
            
-            
-        } catch (Exception e) 
-        {
-           
-             System.out.println("ERROR AL ALMACENAR");
-        }
+         
+        
     }
+    
 }

@@ -5,24 +5,22 @@
  */
 package Servlet;
 
-import controlador.ControladorPerfil;
+import controlador.ControladorUsuario;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import modelo.PerfilAcceso;
 
 /**
  *
  * @author JavierLopez
  */
-@WebServlet(name = "PerfilServlet", urlPatterns = {"/PerfilServlet"})
-public class PerfilServlet extends HttpServlet {
+@WebServlet(name = "PrincipalServlet", urlPatterns = {"/PrincipalServlet"})
+public class PrincipalServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,54 +36,17 @@ public class PerfilServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            RequestDispatcher dispatcher;
-            
-            String tipoPerfil= request.getParameter("slectTipoPerfil");
-            String EstadoPerfil= request.getParameter("selectEstadoPerfil");
-            
-
-         AgregarPerfil(tipoPerfil, EstadoPerfil);
-         dispatcher = request.getRequestDispatcher("/mtdorPerfil.jsp"); 
-         dispatcher.forward(request, response);
-               
-                
-           
-    
-    }
-    }
-    
-   public void AgregarPerfil(String Perfil, String EPerfil)
-           
-   {
-        PerfilAcceso per= new PerfilAcceso();
-        
-         per.setNombreAcceso(Perfil);
-         per.setEstado(EPerfil);
-        
-       //controlador
-       ControladorPerfil CtrPerfil= new ControladorPerfil();
-       CtrPerfil.AgregarPerfiles(per);
-       
-       
-   }
-  
-      //metodo obtener Perfiles
-        public ArrayList<PerfilAcceso> PerfilesListar()
+            ControladorUsuario ctrUsse= new ControladorUsuario();
+                   RequestDispatcher dispatcher = null;
+            String consulta=request.getParameter("btn_ingresar");
+             
+            if (consulta!=null) 
             {
-                controlador.ControladorPerfil ctrlpefl = new ControladorPerfil();
-                ArrayList<PerfilAcceso> lista= new ArrayList<>();
-
-                try {
-                    lista=ctrlpefl.PerfilesListar();
-                    return lista;
-                   }
-                catch (Exception e) 
-                {
-                    return new ArrayList<>();
-                }
+                dispatcher = request.getRequestDispatcher("/index.jsp");
+                 dispatcher.forward(request, response);
             }
-        
-        
+        }
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
