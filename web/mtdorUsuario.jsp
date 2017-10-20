@@ -1,4 +1,5 @@
 
+<%@page import="Servlet.UsuariosServlet"%>
 <%@page import="modelo.PerfilAcceso"%>
 <%@page import="controlador.ControladorPerfil"%>
 <%@page import="controlador.ControladorUsuario"%>
@@ -6,25 +7,31 @@
 <%@page import="java.util.ArrayList"%>
 <%
                                 
-  
+   HttpSession sesion=request.getSession();
    ControladorUsuario ctrlUsuar=new ControladorUsuario();
-  HttpSession sesion=request.getSession();
   ArrayList<Usuarios> listaUsuarios= ctrlUsuar.UsuariosListar();
-                                
+  //-------------------------------------------------------------------
+  
+  ControladorPerfil ctrlPErfil=new ControladorPerfil();
+  ArrayList<PerfilAcceso> listaPerfiles= ctrlPErfil.PerfilesListarActvos();
+                              
+                               
  %>
  
-  <%
-   ControladorPerfil ctrlPErfil=new ControladorPerfil();
-  ArrayList<PerfilAcceso> listaPerfiles= ctrlPErfil.PerfilesListar();
-                              
-                                
- %>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" 
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+       
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+         <script lang="javascript">
+            function popup()
+            {
+                window.open("mtdorPerfil.jsp","","width=600 ,height=600");
+            }
+        </script>
         <title>Mantenedor de usuarios</title>
     </head>
        <div class="content"> 
@@ -67,6 +74,7 @@
         <table border="1" width="5" cellspacing="1" cellpadding="2">
             <thead>
                 <tr>
+                     <th>Rut</th>
                     <th>Tipo perfil</th>
                     <th>Nombre</th>
                     <th>Fecha Nacimiento</th>
@@ -77,13 +85,14 @@
             </thead>
             <tbody>
                 <tr>
+                <th><input type="text" name="txtrut" placeholder="17336928-k" required></th>
                     <th>
-                       <select name="cmb_producto"> 
+                       <select name="cboPerfiles"> 
                             <option value="0">--seleccione--</option>
                            <%
                                 for(PerfilAcceso x:listaPerfiles)
                                 {%>
-                                <option value="<%=x.getIdPerfil()
+                                <option  value="<%=x.getNombreAcceso()
                              
                                 %>">
                                     
@@ -106,13 +115,14 @@
         </table><input type="submit" value="Agregar usuarios" name="btnAgregarPerfil">
         <br><br>
         </form>
-        
+     
+   <form name="frmAcciones" method="Post" action="./ServletEliminarUsuarios">                             
     <h3>Cuentras Creadas</h3>
         <table border="1">
             <thead>
                 <tr>
                   
-                    <th>id perfil</th>
+                    <th>Rut</th>
                     <th>Tipo Perfil</th>
                     <th>Nombre</th>
                     <th>Fecha Nacimiento</th>
@@ -126,23 +136,23 @@
                  <%
                     
                       for(Usuarios u: listaUsuarios)
-                         
-                        
+                  
+                       
                  {%>
                 <tr>
                     
-                    <td> <%=u.getIdUsuario()%></td>
-                    <td> <%= u.getTipoPerfil() %></td>
+                    <td> <%= u.getRut()%></td>
+                    <td> <%= u.getTipoPerfil()%></td>
                     <td> <%=u.getNombre()%></td>
                     <td> <%=u.getFecha_nacimiento()%></td>
                     <td> <%=u.getCorreo()%></td>
-                    <th><a href="#">Eliminar </a></th>
-                    <th><a href="#">Actualizar </a></th>
+                    <td><a href="./ServletEliminarUsuarios?txtEliminarUser=<%=u.getIdUsuario()%>">Eliminar</a></td>
+                    <td><a href="./ServletEliminarUsuarios?txtActualizarUser=<%=u.getIdUsuario()%>" target="blank" onclick="javascript:popup()">Actualizar</a></td>
                     <%}%>
                 </tr>       
                
             </tbody>
         </table>
-    
+   </form>
     </body>
 </html>

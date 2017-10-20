@@ -17,6 +17,9 @@
                                 
  %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" 
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+       
 <!DOCTYPE html>
 <html>
     <head>
@@ -63,7 +66,7 @@
         <h1>Hola javier prepara esta vista de mantenedor de perfil</h1>
         
         <h4>Agregar Perfil</h4>
-        <form name="frmPerfil" method="post" action="">
+        <form name="frmPerfil" method="post" action="./PerfilServlet">
         <table border="1" width="5" cellspacing="1" cellpadding="2">
             <thead>
                 <tr>
@@ -74,8 +77,16 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><input type="text" name="txtNombrePerfil" placeholder="Administrador"></td>
-                            <td><select>
+                    <td>
+                        <select name="slectTipoPerfil">
+                                    <option value=null>Seleccione</option> 
+                                    <option>Administrador</option>
+                                    <option>Operario</option>
+                                    <option>Medico Tratante</option>
+                                    <option>Gerencia</option>
+                        </select>
+                    </td>
+                    <td><select name="selectEstadoPerfil">
                                     <option value=null>Seleccione</option> 
                                     <option>Activo</option>
                                     <option>Inactivo</option>
@@ -113,13 +124,12 @@
                     <td> <%=x.getIdPerfil()%></td>
                    <td> <%= x.getNombreAcceso()%></td>
                     <td> <%=x.getEstado()%></td>
-                    <th><a href="#">Eliminar </a></th>
-                    <th><a href="#">Actualizar </a></th>
-                    <%}%>
+                    <td><a href="mtdorPerfil.jsp?txtActualizr=<%=x.getIdPerfil()%>">Actualizar</a></td>
+                     
                     
-                    
+     
                 </tr>
-               
+               <%}%>
             </tbody>
         </table>
     
