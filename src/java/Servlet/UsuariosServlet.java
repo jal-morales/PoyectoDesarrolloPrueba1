@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 import modelo.Usuarios;
 
 
@@ -43,20 +44,67 @@ public class UsuariosServlet extends HttpServlet {
            
 
                RequestDispatcher dispatcher;
+          
+               
+               String btnActualizar= request.getParameter("btnModificarUsuario");
+               String btnAgregar= request.getParameter("btnAgregarUsuario");
+               
+               String volver= request.getParameter("btnVolverUsuario");
+               if (volver!=null) 
+               {
+                dispatcher = request.getRequestDispatcher("/mtdorUsuario.jsp");
+                dispatcher.forward(request, response);
+              }
+               
+            
+            if (btnActualizar != null ) {
+                //variables Actualizar
+                int idUsuario = Integer.parseInt(request.getParameter("txtidUnico"));
+                String rutPerfilAct = request.getParameter("txtrutModificar");
+                String tipo_perfilAct = request.getParameter("cboPerfilesModificar");
+                String nombreUAct = request.getParameter("txtNombreModificar");
+                String fecha_nacAct = request.getParameter("txtfechaModificar");
+                String correoAct = request.getParameter("txtemailModificar");
+
+                ActualizarUsser(idUsuario, rutPerfilAct, tipo_perfilAct, nombreUAct, fecha_nacAct, correoAct);
+                dispatcher = request.getRequestDispatcher("/mtdorUsuario.jsp");
+                dispatcher.forward(request, response);
+            }
+            
+            
+            if (btnAgregar!=null) 
+            {
+                    //variables Agregar  
             String rutPerfil= request.getParameter("txtrut");
             String tipo_perfil= request.getParameter("cboPerfiles");
             String nombreU=request.getParameter("txtNombre");
             String fecha_nac= request.getParameter("txtfecha");
             String correo=request.getParameter("txtemail");
             String pass= request.getParameter("txtclave");
+            
+                if (rutPerfil.trim().length()<=10) 
+                {
+                     //metodo agregar
+                  AgregarUsser(rutPerfil,tipo_perfil, nombreU, fecha_nac, correo, pass);
+                  //redireccionamiento a pagina
+                  dispatcher = request.getRequestDispatcher("/mtdorUsuario.jsp"); 
+                  dispatcher.forward(request, response);
+                }
+                else
+                {
+                    System.out.println("El rut excede del maximo permitido en caracteres");
+                }
+            
+                 
            
-             
-            AgregarUsser(rutPerfil,tipo_perfil, nombreU, fecha_nac, correo, pass);
-             dispatcher = request.getRequestDispatcher("/mtdorUsuario.jsp"); 
-             dispatcher.forward(request, response);
- 
+          
         }
+            else
+            {
+                System.out.println("No se pudo insertar ya que el btnUsuarios es nulo");
+            }
     }
+ }
 
     
    
@@ -83,16 +131,45 @@ public class UsuariosServlet extends HttpServlet {
         {
             ControladorUsuario ctrolUsser= new ControladorUsuario();
             Usuarios usser= new Usuarios();
-            
+         
             usser.setRut(rut);
             usser.setTipoPerfil(tipoPerfil);
             usser.setNombre(nombre);
             usser.setFecha_nacimiento(fecha);
             usser.setCorreo(correo);
-            usser.setContraseña(correo);
+            usser.setContraseña(pass);
             
             ctrolUsser.AgregarUsuarios(usser);
         }
+        
+        public void ActualizarUsser(int id , String rut, String tipoPerfil,String nombre,String fecha,String correo)
+        {
+            ControladorUsuario ctroUsser= new ControladorUsuario();
+              
+            ctroUsser.ModificarUsuarios(id, rut, tipoPerfil, nombre, fecha, correo);
+           
+        }
+        
+        
+        public boolean ValidarSiExiste(String dato)
+        {
+            boolean respuesta;
+             ControladorUsuario ctrUsser= new ControladorUsuario();
+            respuesta=ctrUsser.BuscarUsserExistente(dato);
+            
+            
+            if (respuesta==false) 
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        
+        }
+        
+        
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

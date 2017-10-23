@@ -12,12 +12,11 @@
   <%
              //session.getAttribute("txtNombre");
              
-            String rut=request.getParameter("txtrut");
-            String TipoPerfil=request.getParameter("cboPerfiles");  
-            String Nombre=request.getParameter("txtNombre");
-            String Fecha=request.getParameter("txtfecha");  
-            String correo=request.getParameter("txtemail"); 
-            String id= request.getParameter("txtActualizarUser");
+      
+            String rutMedico=request.getParameter("RutMedico");  
+            String NombreMedicos=request.getParameter("txtNombreMed"); 
+            String StadoMedico=request.getParameter("txtEstadoMed"); 
+          
             //int id=Integer.parseInt(request.getParameter("txtEliminarUser"));  
              
         %>
@@ -44,13 +43,13 @@
             <div class="container">
                <div class="row"> 
                 <div class="col-sm-12">
-                       <h2>Modificar Usuario</h2>
-                <form name="frmModificarUsuario" method="post" action="./UsuariosServlet">
+                       <h2>Modificar Medico</h2>
+                <form name="frmModificarMedico" method="post" action="./MedicoTratanteServlet">
                     <table class="table table-hover table table-condensed table table-bordered">
                         <thead>
                             <tr>
                                 <th>Rut:</th>
-                                <th><input type="text" name="txtrutModificar" value="<%=rut%>" required></th>
+                                <th><input type="text" name="txtRutMedicoA" value="<%=rutMedico%>" disabled></th>
 
                             </tr>
                             <tr>
@@ -58,11 +57,11 @@
                                 <th>Tipo Perfil:</th>
                                 <th> <select  name="cboPerfilesModificar" >
                                         <option disabled selected>Seleccione</option>
-                                        <option >Operario</option>
-                                        <option>Administrador</option>
-                                        <option >Medico Tratante</option>
+                                        <option >-Seleccione-</option>
+                                        <option>Activo</option>
+                                        <option >Inactivo</option>
                                               
-                                    </select> :Perfil <%=TipoPerfil%>
+                                    </select> :Perfil <%=StadoMedico%>
 
 
                                  </th>
@@ -72,39 +71,20 @@
                             <tr>
 
                                 <th>Nombre:</th>
-                                <th><input type="text" name="txtNombreModificar"value="<%=Nombre%>"  required></th>
+                                <th><input type="text" name="txtNombreModificar"value="<%=NombreMedicos%>"  required></th>
                                 
-
-
-                            </tr>
-                            <tr>
-
-                                <th>Fecha Nacimiento:</th>
-                                <th><input type="date" name="txtfechaModificar" value="<%=Fecha%>"   required > :<%=Fecha%></th>
-                               
+                        
 
                             </tr>
-                            <tr>
-
-                                <th>Correo Electronico:</th>
-                                <th><input type="email" name="txtemailModificar"value="<%=correo%>" ></th>
-
-                            </tr>
-                            <tr>
-
-                                <th></th>
-                                <th><input type="text" name="txtidUnico"value="<%=id%>" readonly="readonly" class="hidden" ></th>
-
-                            </tr>
-
+                          
 
                         
 
                         </thead>
 
                     </table>
-                                <input type="submit" value="Modificar Usuario" name="btnModificarUsuario" class="btn btn-primary" onclick="IsNullSelector()">
-                                <a href="mtdorUsuario.jsp">volver</a>
+                                <input type="submit" value="Modificar Medico" name="btnModificarMedico" class="btn btn-primary">
+                                <a href="mtdorMedicoTratante.jsp">volver</a>
 
                                 </form>
                                  

@@ -135,7 +135,42 @@ public class ControladorPerfil
             
            
          
+     
         
     }
+    
+    public void actualizar( String perfil,String stado)
+         {
+         try {
+                 //llamamos a la conexion 
+            Conexion con = new Conexion();
+            //llamamos a la clase conect           
+                 Connection  conetar=con.getConnection("medipet");
+          
+            
+                  String consulta  = "UPDATE permisos_usuarios SET estado_permiso='"+stado+"'WHERE nombre_permiso='"+perfil+"';";
+           
+                                      
+                  
+                    PreparedStatement stms= conetar.prepareStatement(consulta);
+                  
+                  //llamamos al Statement que ejecutas sentencias Sql
+                        if (stms!=null) 
+                        {
+                        stms.executeUpdate(consulta);
+                        System.out.println("Query ejecutada");
+                        }
+                        else 
+                        {
+                            System.out.println("Query no ejecutada");
+                        }
+                   
+            } catch (Exception e) 
+            {
+                System.out.println("Query no ejecutada");
+              e.printStackTrace();
+            }
+            
+         }
     
 }

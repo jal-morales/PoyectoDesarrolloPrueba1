@@ -15,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 import modelo.PerfilAcceso;
 
 /**
@@ -40,13 +41,41 @@ public class PerfilServlet extends HttpServlet {
             /* TODO output your page here. You may use following sample code. */
             RequestDispatcher dispatcher;
             
-            String tipoPerfil= request.getParameter("slectTipoPerfil");
-            String EstadoPerfil= request.getParameter("selectEstadoPerfil");
-            
+            String btnAgregar=request.getParameter("btnAgregarPerfil");
+            String btnModificar= request.getParameter("btnModificarPerfil");
+           
+            if (btnAgregar != null) 
+            {
+                String tipoPerfil = request.getParameter("slectTipoPerfil");
+               String estadoPerfil = request.getParameter("selectEstadoPerfil");
+                 
+                if (tipoPerfil!=null && estadoPerfil!=null) 
+                {
+                
+                 //validar que el combo no puede estar en seleccione
+                     AgregarPerfil(tipoPerfil, estadoPerfil);
+                }
+               
+               
+              
 
-         AgregarPerfil(tipoPerfil, EstadoPerfil);
-         dispatcher = request.getRequestDispatcher("/mtdorPerfil.jsp"); 
-         dispatcher.forward(request, response);
+               
+                
+            }
+            else if (btnModificar!=null) 
+            {
+                String ModificartipoPerfil = request.getParameter("slectModificarTipoPerfil");
+                String ModificarEstadoPerfil = request.getParameter("selectModificarEstadoPerfil");
+
+                 //validar que el combo no puede estar en seleccione
+                ModificarPErfil(ModificartipoPerfil, ModificarEstadoPerfil);
+                
+            }
+            dispatcher = request.getRequestDispatcher("/mtdorPerfil.jsp");
+            dispatcher.forward(request, response);
+            
+         
+         
                
                 
            
@@ -57,7 +86,9 @@ public class PerfilServlet extends HttpServlet {
    public void AgregarPerfil(String Perfil, String EPerfil)
            
    {
-        PerfilAcceso per= new PerfilAcceso();
+       if (Perfil!="Seleccione" && EPerfil!="Seleccione") 
+       {
+           PerfilAcceso per= new PerfilAcceso();
         
          per.setNombreAcceso(Perfil);
          per.setEstado(EPerfil);
@@ -66,6 +97,8 @@ public class PerfilServlet extends HttpServlet {
        ControladorPerfil CtrPerfil= new ControladorPerfil();
        CtrPerfil.AgregarPerfiles(per);
        
+       }
+        
        
    }
   
@@ -85,7 +118,17 @@ public class PerfilServlet extends HttpServlet {
                 }
             }
         
-        
+        //metodo Modificar Perfil
+        public void ModificarPErfil(String Nperfil, String estadoP)
+        {
+            ControladorPerfil ctroPer= new ControladorPerfil();
+            PerfilAcceso pacceso= new PerfilAcceso();
+            
+            pacceso.setEstado(estadoP);
+          
+            
+            ctroPer.actualizar(Nperfil, estadoP);
+        }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

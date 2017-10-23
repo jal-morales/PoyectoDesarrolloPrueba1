@@ -1,13 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Servlet;
 
+import com.sun.org.apache.xml.internal.security.encryption.AgreementMethod;
 import controlador.ControladorMedicoTratante;
+import controlador.ControladorUsuario;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,12 +14,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.MedicoTratante;
+import modelo.Usuarios;
 import sun.rmi.server.Dispatcher;
 
 /**
  *
  * @author JavierLopez
  */
+
+
 @WebServlet(name = "MedicoTratanteServlet", urlPatterns = {"/MedicoTratanteServlet"})
 public class MedicoTratanteServlet extends HttpServlet {
 
@@ -38,30 +40,108 @@ public class MedicoTratanteServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-        
-            RequestDispatcher dispatcher;
+              RequestDispatcher dispatcher;
             
-         String rutMed= request.getParameter("");
-         String nombremt= request.getParameter("");
-         String estadMedic= request.getParameter("");
-         
-            AgregarMedico(rutMed, nombremt, estadMedic);
-            dispatcher = request.getRequestDispatcher("/mtdorMedicoTratante.jsp"); 
-            dispatcher.forward(request, response);
+            String btnAgregar= request.getParameter("btnAgregarMedico");
+            String linkEliminar= request.getParameter("txtEliminarMedico");
+            String ActualizarMedico= request.getParameter("btnModificarMedico");
             
+            String rutMedico= request.getParameter("txtRutMedico");
+            String nombMedico= request.getParameter("txtNombreMedico");
+            String estadoMedico= request.getParameter("selectEstadoMedicoTratante");
+                        
+            //Metodo Agregar Medico 
+            if (btnAgregar!=null)             
+            {
+                MedicoAgregar(rutMedico, nombMedico, estadoMedico);
+
+                 dispatcher = request.getRequestDispatcher("/mtdorMedicoTratante.jsp"); 
+                 dispatcher.forward(request, response);
+            }
+            //Eliminar Medico
+            else if (linkEliminar!=null) 
             
+            {
+                EliminarMedico(linkEliminar);
+                 dispatcher = request.getRequestDispatcher("/mtdorMedicoTratante.jsp"); 
+                 dispatcher.forward(request, response);
+            }
+            //Modificar Medico
+            else if (ActualizarMedico!=null)
+                
+            {
+                String nuevoNombreMed= request.getParameter("txtNombreModificar");
+                String nuevoPerfilMed= request.getParameter("cboPerfilesModificar");
+                    String medicoRutID= request.getParameter("txtRutMedicoA");
+               
+                try {
+                    ModificarMedico(medicoRutID, nuevoNombreMed, nuevoPerfilMed);
+                    System.out.println("Mod servlet");
+                } catch (Exception e)
+                {
+                    System.out.println("El try del servlet ");
+                    e.getStackTrace();
+                }
+                    
+                    
+                    
+                    dispatcher = request.getRequestDispatcher("/mtdorMedicoTratante.jsp"); 
+                   dispatcher.forward(request, response);
+ 
+            }
             
         }
     }
-    public void AgregarMedico(String rut,String nombre,String estado)
+
+
+    
+     
+        public void MedicoAgregar(String rut,String nombre,String tipoPerfil)
+        {
+            ControladorMedicoTratante ctrolMedic= new ControladorMedicoTratante();
+            MedicoTratante med= new MedicoTratante();
+         
+            med.setRut(rut);
+            med.setNombre(nombre);
+            med.setEstado(tipoPerfil);
+
+            ctrolMedic.AgregarMedicoTratante(med);
+        }
+    
+    //metodo obtener Perfiles Funcionando 
+    public ArrayList<MedicoTratante> MedicoListar() {
+        controlador.ControladorMedicoTratante ctrlmedi = new ControladorMedicoTratante();
+        ArrayList<MedicoTratante> lista_medi = new ArrayList<>();
+
+        try {
+            lista_medi = ctrlmedi.MedicosListar();
+
+            return lista_medi;
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+   public void EliminarMedico(String med)
+   {
+       ControladorMedicoTratante ctrmed= new ControladorMedicoTratante();
+       ctrmed.EliminarMedico(med);
+ 
+   }
+   
+    public void ModificarMedico(String rut,String nomb, String estado)
     {
-        ControladorMedicoTratante ctrMeTrata= new ControladorMedicoTratante();
-        MedicoTratante mdtra= new MedicoTratante();
-        mdtra.setRut(rut);
-        mdtra.setNombre(nombre);
-        mdtra.setEstado(estado);
-        ctrMeTrata.AgregarMedico(mdtra);
-                
+        try { 
+             ControladorMedicoTratante ctrMed= new ControladorMedicoTratante();
+             MedicoTratante med= new MedicoTratante();
+             med.getRut();
+             med.setNombre(nomb);
+             med.setEstado(estado);
+             ctrMed.ModificarUsuarios(rut, nomb, estado);
+             
+             
+        } catch (Exception e) {
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

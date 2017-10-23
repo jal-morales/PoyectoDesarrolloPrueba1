@@ -40,5 +40,6 @@
 
             </table>
         </form>
-    </body>
+    </body><br>
+     <footer>Derechos reservados Programador Jvier Lopez</footer>
 </html>

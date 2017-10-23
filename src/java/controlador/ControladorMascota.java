@@ -149,4 +149,31 @@ public class ControladorMascota
              }
              
          }
+     
+     
+     //modificar mascota
+     
+     public void modificarMascota(int id, String nombre, String estado)
+     {
+         try {
+                  
+                 Conexion con = new Conexion();
+             Connection conectar= con.getConnection("medipet");
+             
+            //STATEMENT PERMITE EJECUTAR CONSULTA SQL 
+            Statement stms = conectar.createStatement();
+            
+            String consulta="UPDATE tipomascotas SET mascota_tipo='"+nombre+"',mascota_estado='"+estado+"'"
+                    + " WHERE idtipo_mascota="+id+";";
+            
+            stms.executeUpdate(consulta);
+             System.out.println("Consulta realizada en Controlador mascota");
+                  
+         } catch (Exception e) 
+         {
+             System.out.println("Fallo la actualizacion de Mascota");
+             e.getStackTrace();
+         }
+     
+     }
 }

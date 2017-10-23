@@ -3,35 +3,35 @@
     Created on : 19-oct-2017, 11:54:35
     Author     : JavierLopez
 --%>
-
-<%@page import="modelo.TipoMascota"%>
-<%@page import="controlador.ControladorMascota"%>
-<%@page import="Servlet.PerfilServlet"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.List"%>
- <%
-   ControladorMascota ctrlMacta=new ControladorMascota();
-  HttpSession sesion=request.getSession();
-  ArrayList<TipoMascota> lista= ctrlMacta.TipoMascotasListar();
-                              
-                                
- %>
+<%@page import="modelo.MedicoTratante"%>
+<%@page import="controlador.ControladorMedicoTratante"%>
+<%
+
+    HttpSession sesion = request.getSession();
+    ControladorMedicoTratante ctrlMEd = new ControladorMedicoTratante();
+    ArrayList<MedicoTratante> listaMedi = ctrlMEd.MedicosListar();
+  //-------------------------------------------------------------------
+
+
+%>
+
+ 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-      <link href="css/estilos.css" rel="stylesheet" type="text/css" />
+     <link href="css/estilos.css" rel="stylesheet" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
          <link href="css/estilos.css" rel="stylesheet" type="text/css" />
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css" />
-    <link href="css/navbar-static-top.css" rel="stylesheet" type="text/css" />  
+    <link href="css/navbar-static-top.css" rel="stylesheet" type="text/css" />   
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Mantenedor Medicos Tratante</title>
     </head>
     <body>
         
- 
-     <form name="frmPrincipal" method="post" action="./PrincipalServlet">   
+ <form name="frmPrincipal" method="post" action="./PrincipalServlet">   
       
       <!-- Static navbar -->
     <div class="navbar navbar-inverse navbar-static-top">
@@ -70,30 +70,36 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-  <div class="container">
+
+      
+       <div class="container">
                <div class="row"> 
                 <div class="col-sm-12">
 
     </form>
-        <h1>Hola javier prepara esta vista de mantenedor de Mascota</h1>
+        <h1>Hola javier prepara esta vista de mantenedor de Medicos Tratante</h1>
         
-        <h4>Agregar Tipo Mascota</h4>
-        <form name="frmPerfil" method="post" action="./MascotaServlet">
+        <h4>Agregar Perfil</h4>
+        <form name="frmMedicoTratante" method="post" action="./MedicoTratanteServlet">
         <table border="1" width="5" cellspacing="1" cellpadding="2"class="table table-hover table table-condensed table table-bordered">
             <thead>
                 <tr>
-                    <th>Nombre Mascota</th>
-                    <th>Estado Mascota</th>
+                    <th>Rut</th>
+                    <th>Nombre Medico</th>
+                    <th>Estado </th>
                     
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-                        <input type="text" name="txtTipoMascota" placeholder="Perro" required> 
+                        <input type="text" name="txtRutMedico" placeholder="17336928-k" required>
                     </td>
-                    <td><select name="selectEstadoMacota">
-                            <option  disabled value="0" selected="">Seleccione</option> 
+                     <td>
+                        <input type="text" name="txtNombreMedico" placeholder="Javier Lopez" required>
+                    </td>
+                    <td><select name="selectEstadoMedicoTratante">
+                                    <option disabled value="0">Seleccione</option> 
                                     <option>Activo</option>
                                     <option>Inactivo</option>
                         </select>
@@ -103,49 +109,51 @@
                 
             </tbody>
             
-        </table><input type="submit" value="Agregar Mascotas" name="btnAgregarMascotas" class="btn btn-primary">
+        </table><br><input type="submit" value="Agregar Medico" name="btnAgregarMedico" class="btn btn-primary">
         <br><br>
         </form>
         
-    <h3>Mascotas Creadas</h3>
+    <h3>Medicos Creados</h3>
         <table class="table table-hover table table-condensed table table-bordered">
             <thead>
                 <tr>
                   
                     
+                    <th>Rut</th>
                     <th>Nombre</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                     <th></th>
+                    
                      
                 </tr>
             </thead>
             <tbody>
-                 <%
-                    
-                      for(TipoMascota x:lista)
-                          
-                       
-                 {%>
+
+                <%                  for (MedicoTratante u : listaMedi) 
+                             
+                {%>
+                
                 <tr>
-                    
-                    
-                   <td> <%= x.getNombreTipoMascota()%></td>
-                    <td> <%= x.getEstadoTipoMascota()%></td>
-                     <td><a href="./ServletEliminarMascotas?txtEliminarMascota=<%=x.getIdTipoMascota()%>">Eliminar</a></td>
-                    <td><a href="ModificarMascotas.jsp?idMascota=<%=x.getIdTipoMascota()%>&&nombreMascota=<%= x.getNombreTipoMascota()%>&&cboestadoMascota=<%= x.getEstadoTipoMascota()%>">Actualizar</a></td>
-                     
-                    
-     
-                </tr>
-               <%}%>
+
+                    <td> <%= u.getRut()%></td>
+                    <td> <%=  u.getNombre()%></td>
+                    <td> <%=u.getEstado()%></td>
+                    <td><a href="./MedicoTratanteServlet?txtEliminarMedico=<%=u.getRut()%>" target="popup" onClick="popup()" target="_blank">Eliminar</a></td>
+                    <td> <a href="ModificarMedico.jsp?RutMedico=<%= u.getRut()%>&&txtNombreMed=<%=  u.getNombre()%> &&txtEstadoMed=<%=u.getEstado()%>"target="popup" onClick="popup()" target="_blank"  >Actualizar</a></td>
+
+                    <%}%>
+
+                </tr>       
+
             </tbody>
         </table>
-    
-        </div>
+</div>
                </div>
-           
-  </div>
-         </body><br>  <footer>Derechos reservados Programador Jvier Lopez</footer>
-    
+           <footer>Derechos reservados Programador Jvier Lopez</footer>
+       </div>
+
+         </body><br>
+         
+     
 </html>

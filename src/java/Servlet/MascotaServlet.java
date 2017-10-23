@@ -6,13 +6,17 @@
 package Servlet;
 
 import controlador.ControladorMascota;
+import controlador.ControladorPerfil;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import modelo.PerfilAcceso;
 import modelo.TipoMascota;
 
 /**
@@ -34,14 +38,48 @@ public class MascotaServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
+        try (PrintWriter out = response.getWriter()) 
+        {
             /* TODO output your page here. You may use following sample code. */
+            RequestDispatcher dispatcher;
             String TipoMascota= request.getParameter("txtTipoMascota");
             String EstadoMascota=request.getParameter("selectEstadoMacota");
             
+            //botones accion
+            String btnAgregarMascota= request.getParameter("btnAgregarMascotas");
+            String btnModificarMascota= request.getParameter("btnModificarMascota");
             
-            AgregartipoMAscota(TipoMascota, EstadoMascota);
+            //controlador de accion
+            if (btnAgregarMascota!=null) 
+            {
+                AgregartipoMAscota(TipoMascota, EstadoMascota);
+                dispatcher = request.getRequestDispatcher("/mtdorTipoMascota.jsp");
+                dispatcher.forward(request, response);
+            }
             
+            //modificar Mascota
+            else if (btnModificarMascota!=null) 
+            {
+                String nombre_mascota= request.getParameter("txtnomModificarMascota");
+                String estado_mascota= request.getParameter("cboMascotaEstadoModificar");
+                int id_mascota=Integer.parseInt(request.getParameter("txtidMascotaAModificar"));
+                try {
+                    ActualizarMascota(id_mascota, nombre_mascota, estado_mascota);
+                    dispatcher = request.getRequestDispatcher("/mtdorTipoMascota.jsp");
+                    dispatcher.forward(request, response);
+                } catch (Exception e) 
+                
+                {
+                    System.out.println("No se pudo modificar , Revisar servlet condicion modificar");
+                    e.getStackTrace();
+                    dispatcher = request.getRequestDispatcher("/mtdorTipoMascota.jsp");
+                    dispatcher.forward(request, response);
+                }
+               
+            }
+            
+            
+          
         }
     }
     
@@ -58,6 +96,36 @@ public class MascotaServlet extends HttpServlet {
         CtrMcta.AgreagarTipoMascota(tmcta);
     }
 
+     //metodo obtener Perfiles
+        public ArrayList<TipoMascota> MascotasListarAll()
+            {
+                controlador.ControladorMascota ctrlMcta = new ControladorMascota();
+                ArrayList<TipoMascota> lista= new ArrayList<>();
+
+                try {
+                    lista=ctrlMcta.TipoMascotasListar();
+                    return lista;
+                   }
+                catch (Exception e) 
+                {
+                    return new ArrayList<>();
+                }
+            }
+        
+        
+        public void ActualizarMascota(int idmas,String nombre,String estado)
+        {
+            ControladorMascota ctrMasc= new ControladorMascota();
+            TipoMascota tmas= new TipoMascota();
+            
+            tmas.setIdTipoMascota(idmas);
+            tmas.setNombreTipoMascota(nombre);
+            tmas.setEstadoTipoMascota(estado);
+            ctrMasc.modificarMascota(idmas, nombre, estado);
+                    
+            
+        }
+        
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -22,6 +22,60 @@ import modelo.Usuarios;
 public class ControladorUsuario 
 {
  
+    //Modificar Usaurios
+     public void EliminarUsuario(int idUsuari)
+    {
+        try {
+            
+            Conexion conn = new Conexion();
+            Connection conexion = conn.getConnection("medipet");
+            
+            //STATEMENT PERMITE EJECUTAR CONSULTA SQL 
+            Statement stms = conexion.createStatement();
+            
+            String consulta="DELETE FROM usuarios WHERE idusuarios="+idUsuari+";";
+            
+             stms.executeUpdate(consulta);
+             
+             
+             System.out.println("Eliminado exitozamente");
+            
+        } catch (Exception e) {
+            System.out.println("No fue elminicado correctamente");
+        }
+    }
+    
+    
+    
+  public void ModificarUsuarios( int id,String rut,String tipoPerf,String nombre,String fecha,String correo )
+    {
+               
+            try {
+                 //llamamos a la conexion 
+            Conexion con = new Conexion();
+            //llamamos a la clase conect           
+                 Connection  conetar=con.getConnection("medipet");
+          
+            
+                  String consulta  = "UPDATE usuarios SET rut='"+rut+"',tipo_perfil='"+tipoPerf+"',"
+                       + "nombre='"+nombre+"',fecha_nacimiento='"+fecha+"',correo='"+correo+"' WHERE idusuarios="+id+";";
+                      
+                    PreparedStatement stms= conetar.prepareStatement(consulta);
+                  
+                  //llamamos al Statement que ejecutas sentencias Sql
+                      
+                        stms.executeUpdate(consulta);
+                        
+                       System.out.println("consulta relizada ");
+                      
+            } catch (Exception e) 
+            {
+                System.out.println("Query no ejecutada");
+              e.printStackTrace();
+            }
+    }
+    
+    
     public ArrayList<Usuarios> UsuariosListar()
     { 
         ArrayList<Usuarios> usuarios_lista=new ArrayList<>();
@@ -60,32 +114,6 @@ public class ControladorUsuario
         
     
     }
-
-    //Eliminar 
-    
-    public void EliminarUsuario(int idUsuari)
-    {
-        try {
-            
-            Conexion conn = new Conexion();
-            Connection conexion = conn.getConnection("medipet");
-            
-            //STATEMENT PERMITE EJECUTAR CONSULTA SQL 
-            Statement stms = conexion.createStatement();
-            
-            String consulta="DELETE FROM usuarios WHERE idusuarios="+idUsuari+";";
-            
-             stms.executeUpdate(consulta);
-             
-             
-             System.out.println("Eliminado exitozamente");
-            
-        } catch (Exception e) {
-            System.out.println("No fue elminicado correctamente");
-        }
-    }
-    
-    
     
   public void AgregarUsuarios(Usuarios user)
     {
@@ -95,11 +123,11 @@ public class ControladorUsuario
             Conexion con = new Conexion();
             //llamamos a la clase conect           
                  Connection  conetar=con.getConnection("medipet");
-          
-            
-                  String consulta  = "INSERT INTO usuarios VALUES(null,'" 
-                    + user.getTipoPerfil()+ "', '"
-                    + user.getRut()+ "', '"      
+                 
+               
+                     String consulta  = "INSERT INTO usuarios VALUES(null,'" 
+                    + user.getRut()+ "', '"
+                    + user.getTipoPerfil()+ "', '"      
                     + user.getNombre()+ "', '"
                     + user.getFecha_nacimiento()+ "', '"
                     + user.getCorreo()+ "', '"
@@ -117,6 +145,7 @@ public class ControladorUsuario
                         {
                             System.out.println("Query no ejecutada");
                         }
+
                    
             } catch (Exception e) 
             {
@@ -124,9 +153,37 @@ public class ControladorUsuario
               e.printStackTrace();
             }
             
-           
-         
+ 
         
     }
+  
+  
+  public boolean BuscarUsserExistente(String user)
+  {
+      try {
+          boolean respuesta;
+                 //llamamos a la conexion 
+            Conexion con = new Conexion();
+            //llamamos a la clase conect           
+                 Connection  conetar=con.getConnection("medipet");
+                 
+                 String  consultasiExiste="select * from usuarios where rut='"+user+"';";
+                 PreparedStatement stmsSiExiste= conetar.prepareStatement(consultasiExiste);
+                 
+                 
+                 if (stmsSiExiste!=null) 
+                 {
+                      return  respuesta=true;
+                 }
+                else
+                 {
+                     return respuesta=false;
+                 }
+      } catch (Exception e)
+      {
+          return false;
+      }
+  }
+  
 
 }

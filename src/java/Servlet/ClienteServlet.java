@@ -5,7 +5,7 @@
  */
 package Servlet;
 
-import controlador.ControladorUsuario;
+import controlador.ControladorCiente;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -14,15 +14,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JOptionPane;
-import javax.swing.RootPaneContainer;
+import modelo.Cliente;
+import sun.rmi.server.Dispatcher;
 
 /**
  *
  * @author JavierLopez
  */
-@WebServlet(name = "ServletEliminarUsuarios", urlPatterns = {"/ServletEliminarUsuarios"})
-public class ServletEliminarUsuarios extends HttpServlet {
+@WebServlet(name = "ClienteServlet", urlPatterns = {"/ClienteServlet"})
+public class ClienteServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,34 +38,46 @@ public class ServletEliminarUsuarios extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            try {
-                RequestDispatcher dispatcher;
-                int eliminar= Integer.parseInt(request.getParameter("txtEliminarUser"));
-
-                
- 
-                    ElimiarUser((eliminar));
-                   dispatcher = request.getRequestDispatcher("/mtdorUsuario.jsp"); 
-                   dispatcher.forward(request, response);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Los datos son nulos");
+            RequestDispatcher dispatcher;
+            String rutCliente= request.getParameter("txtrutCliente");
+            String nomCliente= request.getParameter("txtNombreCliente");
+            String dir_cliente= request.getParameter("txtDireccionCliente");
+            String fechaNcimi_cliente= request.getParameter("txtfechNacimientoClientex");
+            String correo_cliente= request.getParameter("txtEmailCliente");
+            String sexo_cliente= request.getParameter("selectorSexoCliente");
+            
+            
+            String btnAgregar= request.getParameter("btnAgregarCliente");
+            //metodo agregar
+            
+            if (btnAgregar!=null) 
+            {
+                AgregarCliente(rutCliente, nomCliente, dir_cliente, fechaNcimi_cliente, correo_cliente, sexo_cliente);
+                dispatcher = request.getRequestDispatcher("/gestionCliente.jsp");
+                dispatcher.forward(request, response);
             }
+            
+           
         }
     }
- public void ElimiarUser(int elim)
+    
+    
+    
+    public void AgregarCliente(String rut,String nombre,String direccion,String fecha_nacimienti,String correo,String sexo)
     {
-        try {
-            ControladorUsuario ctrUsser= new ControladorUsuario();
-            ctrUsser.EliminarUsuario(elim);
-            
-        } catch (Exception e) 
-        {
-            System.out.println("EROOR al eliminar");
-        }
-            
+        ControladorCiente ctrClient = new ControladorCiente();
+        Cliente cte= new Cliente();
+        
+        cte.setRut(rut);
+        cte.setNombre(nombre);
+        cte.setDireccion(direccion);
+        cte.setFechaNacimiento(fecha_nacimienti);
+        cte.setCorreoElectronico(correo);
+        cte.setSexo(sexo);
+       ctrClient.AgregarCliente(cte);
+    
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
