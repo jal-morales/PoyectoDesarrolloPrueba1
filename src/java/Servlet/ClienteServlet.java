@@ -6,8 +6,10 @@
 package Servlet;
 
 import controlador.ControladorCiente;
+import controlador.ControladorMascota;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import modelo.Cliente;
+import modelo.TipoMascota;
 import sun.rmi.server.Dispatcher;
 
 /**
@@ -42,20 +45,30 @@ public class ClienteServlet extends HttpServlet {
             String rutCliente= request.getParameter("txtrutCliente");
             String nomCliente= request.getParameter("txtNombreCliente");
             String dir_cliente= request.getParameter("txtDireccionCliente");
-            String fechaNcimi_cliente= request.getParameter("txtfechNacimientoClientex");
+            String fechaNcimi_cliente= request.getParameter("txtfechNacimientoCliente");
             String correo_cliente= request.getParameter("txtEmailCliente");
             String sexo_cliente= request.getParameter("selectorSexoCliente");
             
             
             String btnAgregar= request.getParameter("btnAgregarCliente");
+            String LinkEliminar= request.getParameter("likEliminarCliente");
             //metodo agregar
-            
+      
             if (btnAgregar!=null) 
             {
                 AgregarCliente(rutCliente, nomCliente, dir_cliente, fechaNcimi_cliente, correo_cliente, sexo_cliente);
                 dispatcher = request.getRequestDispatcher("/gestionCliente.jsp");
                 dispatcher.forward(request, response);
             }
+            //metodo Eliminar
+            else 
+           if (LinkEliminar!=null)
+            {
+                EliminarCliente(LinkEliminar);
+                dispatcher = request.getRequestDispatcher("/gestionCliente.jsp");
+                dispatcher.forward(request, response);
+            }
+           // Falta Actualizar
             
            
         }
@@ -77,6 +90,30 @@ public class ClienteServlet extends HttpServlet {
        ctrClient.AgregarCliente(cte);
     
     }
+    
+    
+    public void EliminarCliente(String rutCliente)
+    {
+        ControladorCiente ctrClient= new ControladorCiente();
+        ctrClient.EliminarCliente(rutCliente);
+    }
+    
+    //metodo obtener Cliente
+        public ArrayList<Cliente> ClienteListarAll()
+            {
+                ControladorCiente ctrlcte = new ControladorCiente();
+                ArrayList<Cliente> lista= new ArrayList<>();
+
+                try {
+                    lista=ctrlcte.ClienteListar();
+                    return lista;
+                   }
+                catch (Exception e) 
+                {
+                    return new ArrayList<>();
+                }
+            }
+        
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
